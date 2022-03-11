@@ -1,5 +1,6 @@
 #include "VM.h"
-#include <stdint.h>
+#include <iostream>
+#include <cstdint>
 
 VM::VM(){
 	init_registers();
@@ -29,9 +30,9 @@ uint32_t VM::get_reg(uint8_t rd){
 	// Register 0 must be 0, it is always 0
 	// returns register value
 	if (rd > 31) {
-		std::cerr << "Nonexistant register referenced";
+		std::cerr << "Fatal: Nonexistant register referenced";
 		std::cerr << "At pc = " << pc;
-		return 0xFFFF; // Need a real error code system
+		exit(1); // TODO get better error system
 	}
 	if (rd == 0) return 0;
 	return reg[rd];
