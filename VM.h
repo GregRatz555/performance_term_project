@@ -5,18 +5,27 @@
 
 #ifndef __VM_H__
 #define __VM_H__
-#include <cstdint>
 
+#include <atomic>
+#include <cstdint>
+#include "ALU.h"
+#include "Memory.h"
+#include "Registers.h"
 
 class VM {
-	uint32_t reg[32];	// Register 
-	uint32_t pc;	// program counter
-	public:
-		VM();
-		void init_registers();
-		uint8_t set_reg(uint8_t rd, uint32_t value);
-		uint32_t get_reg(uint8_t rd);
-		void dump_reg();
+  Memory mem_{4*1024};
+  Registers regs_;
+  ALU alu_;
+  std::atomic<bool> keep_running_{true};
+
+  public:
+    VM();
+    bool execute(const uint32_t raw_instruction);
+    bool run();
+    bool run(uint32_t instruction_count);
+    void dump();
+    void dump_mem(uint32_t front, uint32_t back);
+    void load_elf(const char *filename);
 };
 
 #endif
