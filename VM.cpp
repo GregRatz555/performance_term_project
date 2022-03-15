@@ -1,7 +1,10 @@
 #include "VM.h"
+
+#include <cstdint>
+#include <fstream>
 #include <iostream>
 #include <stdio.h>
-#include <cstdint>
+#include <vector>
 
 #include "Decode.h"
 
@@ -78,6 +81,10 @@ bool VM::execute(const uint32_t raw_instruction) {
       mem_.store_word(regs_, Decode::decode_rs1(raw_instruction), Decode::decode_rs2(raw_instruction), Decode::decode_S_imm(raw_instruction));
       break;
 
+    case Decode::kAddUpperImmToPCInstruction:
+      regs_.set(Decode::decode_rd(raw_instruction), (regs_.get_pc() + (Decode::decode_U_imm(raw_instruction)<<12) ));
+      break;
+
     case Decode::kInvalidInstruction:
       // fallthrough
     default:
@@ -87,25 +94,22 @@ bool VM::execute(const uint32_t raw_instruction) {
 }
 
 void VM::dump_mem(uint32_t front, uint32_t back){
-	mem_.debug_dump_range(front, back);
+       mem_.debug_dump_range(front, back);
 }
 
-void VM::load_elf(const char *filename){
-    // TODO parse elf header?
-	printf("Loading ELF FIle: %s!\n", filename);
-	uint32_t w_addr = 0;
-	FILE *f = fopen(filename, "rb");
-    // Read in the header
-	char elf_header[53];
-	char c;
-	for (int i = 0; i < 53; i++){
-		c = getc(f);
-		elf_header[i] = c;
-	}
-    // Read in the rest of the ELF
-	while (c != EOF) {
-		mem_.store(w_addr++, (uint8_t)c);
-		c = getc(f);
-   }
-   fclose(f);
+void VM::load_elf(const std::string &filename){
+  printf("Loading Bin File: %s!\n", filename.c_str());
+
+  std::ifstream input_file(filename, std::ios::binary);
+  input_file.seekg(0, std::ios::end);
+  const auto size = input_file.tellg();
+  input_file.seekg(0);
+
+  std::vector<uint8_t> data;
+  data.resize(size);
+  input_file.read((char*)data.data(), size);
+
+  for(int i = 0; i < size; i++) {
+    mem_.store(i, data[i]);
+  }
 }

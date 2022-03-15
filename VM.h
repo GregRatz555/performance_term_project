@@ -8,6 +8,7 @@
 
 #include <atomic>
 #include <cstdint>
+#include <string>
 
 #include "ALU.h"
 #include "Memory.h"
@@ -26,7 +27,7 @@ class VM {
     bool run(uint32_t instruction_count);
     void dump();
     void dump_mem(uint32_t front, uint32_t back);
-    void load_elf(const char *filename);
+    void load_elf(const std::string &filename);
 };
 
 #endif
