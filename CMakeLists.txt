@@ -10,6 +10,7 @@ add_library(riscv-cpu
   Decode.cpp
   ALU.cpp
   Memory.cpp
+  Registers.cpp
 )
 
 add_executable(rv_simulator main.cpp)
