@@ -9,7 +9,7 @@ Memory::Memory(const std::size_t memsize){
 uint8_t Memory::init(uint32_t memsize){
 	// Try to create a sector of memory with the given size,
 	// Return success of operation
-	/*
+    /* (doesn't work, initial pointer not null?)
 	if (Memory::storage != 0) {
 		// Avoid memleak and use-after-free
 		// If for some reason a memory is re-init'ed, lose the old
@@ -17,19 +17,19 @@ uint8_t Memory::init(uint32_t memsize){
 		free(Memory::storage);
 		Memory::storage = 0;
 	}
-	*/
+    */
 	// Create an empty memory block
 	Memory::storage = (uint8_t*)calloc(memsize, sizeof(uint8_t));
-	if (Memory::storage == 0) {
+	if (Memory::storage == NULL) {
 		// In case of failure, reset attributes
-		std::cout << "Storage Init failed!" << std::endl;
+		std::cout << "Storage Init failed!";
 		Memory::addr_range[0] = 0x0000;
 		Memory::addr_range[1] = 0x0000;
 		Memory::size = 0;
 		return 1;
 	} else {
 		// Else update attributes
-		std::cout << "Storage Init Success!" << std::endl;
+		std::cout << "Storage Init Success!";
 		Memory::addr_range[0] = 0x0000;
 		Memory::addr_range[1] = 0x0000 + memsize;
 		Memory::size = memsize;

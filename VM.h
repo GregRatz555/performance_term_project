@@ -8,12 +8,13 @@
 
 #include <atomic>
 #include <cstdint>
+
 #include "ALU.h"
 #include "Memory.h"
 #include "Registers.h"
 
 class VM {
-  Memory mem_{4*1024};
+  Memory mem_{64*1024};
   Registers regs_;
   ALU alu_;
   std::atomic<bool> keep_running_{true};

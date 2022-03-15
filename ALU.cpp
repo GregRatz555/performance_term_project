@@ -3,7 +3,7 @@
 #include <iostream>
 
 ALU::ALU(){
-  std::cout << "ALU created!" << std::endl;
+  std::cout << "ALU CREATED" << std::endl;
 }
 
 // R-Type Instructions

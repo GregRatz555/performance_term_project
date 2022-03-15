@@ -101,6 +101,7 @@ namespace Decode {
   RegisterType decode_rs2(const uint32_t raw_instruction);
 
   uint16_t decode_I_imm(const uint32_t raw_instruction);
+  uint16_t decode_S_imm(const uint32_t raw_instruction);
 
   uint8_t decode_opcode(const uint32_t raw_instruction);
   uint8_t decode_R_func7(const uint32_t raw_instruction);
