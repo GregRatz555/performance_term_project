@@ -53,8 +53,8 @@ uint32_t Registers::get(const uint8_t rd) const
 void Registers::dump() const
 {
   // Prints all register states
-  std::cout << "PC:\t" << pc_ << std::endl;
+  printf("REG[PC] = %d\n", pc_);
   for (int r=0; r<32; r++) {
-    std::cout << "REG[" << r << "]:\t" << regs_[r] << std::endl;
+    printf("REG[%02d] = %d\n", r, regs_[r]);
   }
 }

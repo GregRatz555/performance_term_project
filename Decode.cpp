@@ -155,6 +155,11 @@ uint16_t decode_S_imm(const uint32_t raw_instruction)
   return imm_upper | imm_lower;
 }
 
+uint16_t decode_U_imm(const uint32_t raw_instruction)
+{
+  return raw_instruction >> 12;
+}
+
 InstructionType decode_load_I(const uint32_t raw_instruction)
 {
   const uint8_t func3 = decode_func3(raw_instruction);

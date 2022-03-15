@@ -138,7 +138,7 @@ void Memory::write_word(uint32_t req_address, uint32_t value)
 void Memory::debug_dump_range(uint32_t front, uint32_t back){
 	for (uint32_t i = front; i < back; i++){
 		uint8_t next = Memory::load(i);
-		printf("MEM[%u] = [%u]\n", i, next);
+		printf("MEM[%u] = [%02X]\n", i, next);
 	}
 }
 
