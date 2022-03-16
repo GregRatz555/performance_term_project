@@ -43,43 +43,97 @@ bool VM::execute(const uint32_t raw_instruction) {
   const Decode::InstructionType instruction = Decode::decode(raw_instruction);
   switch(instruction) {
     case Decode::kAddInstruction:
-      alu_.ADD(regs_, Decode::decode_rd(raw_instruction), Decode::decode_rs1(raw_instruction), Decode::decode_rs2(raw_instruction));
+      alu_.ADD(regs_, Decode::decode_rd(raw_instruction), 
+		Decode::decode_rs1(raw_instruction), 
+		Decode::decode_rs2(raw_instruction));
       break;
     case Decode::kSubInstruction:
-      alu_.SUB(regs_, Decode::decode_rd(raw_instruction), Decode::decode_rs1(raw_instruction), Decode::decode_rs2(raw_instruction));
+      alu_.SUB(regs_, Decode::decode_rd(raw_instruction), 
+		Decode::decode_rs1(raw_instruction),
+		Decode::decode_rs2(raw_instruction));
       break;
     case Decode::kXorInstruction:
-      alu_.XOR(regs_, Decode::decode_rd(raw_instruction), Decode::decode_rs1(raw_instruction), Decode::decode_rs2(raw_instruction));
+      alu_.XOR(regs_, Decode::decode_rd(raw_instruction),
+		Decode::decode_rs1(raw_instruction),
+		Decode::decode_rs2(raw_instruction));
       break;
     case Decode::kOrInstruction:
-      alu_.OR(regs_, Decode::decode_rd(raw_instruction), Decode::decode_rs1(raw_instruction), Decode::decode_rs2(raw_instruction));
+      alu_.OR(regs_, Decode::decode_rd(raw_instruction),
+		Decode::decode_rs1(raw_instruction),
+		Decode::decode_rs2(raw_instruction));
       break;
 
     case Decode::kLoadByteInstruction:
-      mem_.load_byte(regs_, Decode::decode_rd(raw_instruction), Decode::decode_rs1(raw_instruction), Decode::decode_I_imm(raw_instruction));
+      mem_.load_byte(regs_, Decode::decode_rd(raw_instruction),
+		Decode::decode_rs1(raw_instruction),
+		Decode::decode_I_imm(raw_instruction));
       break;
     case Decode::kLoadHalfInstruction:
-      mem_.load_half(regs_, Decode::decode_rd(raw_instruction), Decode::decode_rs1(raw_instruction), Decode::decode_I_imm(raw_instruction));
+      mem_.load_half(regs_, Decode::decode_rd(raw_instruction),
+		Decode::decode_rs1(raw_instruction),
+		Decode::decode_I_imm(raw_instruction));
       break;
     case Decode::kLoadWordInstruction:
-      mem_.load_word(regs_, Decode::decode_rd(raw_instruction), Decode::decode_rs1(raw_instruction), Decode::decode_I_imm(raw_instruction));
+      mem_.load_word(regs_, Decode::decode_rd(raw_instruction),
+		Decode::decode_rs1(raw_instruction),
+		Decode::decode_I_imm(raw_instruction));
       break;
     case Decode::kLoadByteUInstruction:
-      mem_.load_u_byte(regs_, Decode::decode_rd(raw_instruction), Decode::decode_rs1(raw_instruction), Decode::decode_I_imm(raw_instruction));
+      mem_.load_u_byte(regs_, Decode::decode_rd(raw_instruction),
+		Decode::decode_rs1(raw_instruction),
+		Decode::decode_I_imm(raw_instruction));
       break;
     case Decode::kLoadHalfUInstruction:
-      mem_.load_u_half(regs_, Decode::decode_rd(raw_instruction), Decode::decode_rs1(raw_instruction), Decode::decode_I_imm(raw_instruction));
+      mem_.load_u_half(regs_, Decode::decode_rd(raw_instruction),
+		Decode::decode_rs1(raw_instruction),
+		Decode::decode_I_imm(raw_instruction));
       break;
 
     case Decode::kStoreByteInstruction:
-      mem_.store_byte(regs_, Decode::decode_rs1(raw_instruction), Decode::decode_rs2(raw_instruction), Decode::decode_S_imm(raw_instruction));
+      mem_.store_byte(regs_, Decode::decode_rs1(raw_instruction),
+		Decode::decode_rs2(raw_instruction),
+		Decode::decode_S_imm(raw_instruction));
       break;
     case Decode::kStoreHalfInstruction:
-      mem_.store_half(regs_, Decode::decode_rs1(raw_instruction), Decode::decode_rs2(raw_instruction), Decode::decode_S_imm(raw_instruction));
+      mem_.store_half(regs_, Decode::decode_rs1(raw_instruction),
+		Decode::decode_rs2(raw_instruction),
+		Decode::decode_S_imm(raw_instruction));
       break;
     case Decode::kStoreWordInstruction:
-      mem_.store_word(regs_, Decode::decode_rs1(raw_instruction), Decode::decode_rs2(raw_instruction), Decode::decode_S_imm(raw_instruction));
+      mem_.store_word(regs_, Decode::decode_rs1(raw_instruction),
+		Decode::decode_rs2(raw_instruction),
+		Decode::decode_S_imm(raw_instruction));
       break;
+	case Decode::kBranchEqualInstruction:
+	  alu_.BEQ(regs_, Decode::decode_rs1(raw_instruction),
+		Decode::decode_rs2(raw_instruction),
+		Decode::decode_B_imm(raw_instruction));
+	  break;
+	case Decode::kBranchNotEqualInstruction:
+	  alu_.BNE(regs_, Decode::decode_rs1(raw_instruction),
+		Decode::decode_rs2(raw_instruction),
+		Decode::decode_B_imm(raw_instruction));
+	  break;
+	case Decode::kBranchLessThanInstruction:
+	  alu_.BLT(regs_, Decode::decode_rs1(raw_instruction),
+		Decode::decode_rs2(raw_instruction),
+		Decode::decode_B_imm(raw_instruction));
+	  break;
+	case Decode::kBranchGreaterThanEqualInstruction:
+	  alu_.BGE(regs_, Decode::decode_rs1(raw_instruction),
+		Decode::decode_rs2(raw_instruction),
+		Decode::decode_B_imm(raw_instruction));
+	  break;
+	case Decode::kBranchLessThanUInstruction:
+	  alu_.BLTU(regs_, Decode::decode_rs1(raw_instruction),
+		Decode::decode_rs2(raw_instruction),
+		Decode::decode_B_imm(raw_instruction));
+	  break;
+	case Decode::kBranchGreaterThanEqualUInstruction:
+	  alu_.BGEU(regs_, Decode::decode_rs1(raw_instruction),
+		Decode::decode_rs2(raw_instruction),
+		Decode::decode_B_imm(raw_instruction));
+	  break;
 
     case Decode::kAddUpperImmToPCInstruction:
       regs_.set(Decode::decode_rd(raw_instruction), (regs_.get_pc() + (Decode::decode_U_imm(raw_instruction)<<12) ));
@@ -88,7 +142,8 @@ bool VM::execute(const uint32_t raw_instruction) {
     case Decode::kInvalidInstruction:
       // fallthrough
     default:
-      throw std::runtime_error("Invalid or unknown instruction id: " + std::to_string(instruction) + " [" + std::to_string(raw_instruction) + "]");
+      throw std::runtime_error("Invalid or unknown instruction id: " +
+			 std::to_string(instruction) + " [" + std::to_string(raw_instruction) + "]");
   }
   return true;
 }

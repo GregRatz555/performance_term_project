@@ -155,6 +155,16 @@ uint16_t decode_S_imm(const uint32_t raw_instruction)
   return imm_upper | imm_lower;
 }
 
+int16_t decode_B_imm(const uint32_t raw_instruction)
+{
+  int16_t imm = 0;
+  imm |= (raw_instruction >> 8) & 0b1111; 				// imm[4:1]
+  imm |= (raw_instruction >> 21) & 0b1111110000;		// imm[10:5]
+  imm |= (raw_instruction & 0b10000000) << 4;			// imm[11]
+  if ((raw_instruction & 0x80000000) != 0) imm *= -1;	// imm[12](sign bit)
+  return imm;
+}
+
 uint16_t decode_U_imm(const uint32_t raw_instruction)
 {
   return raw_instruction >> 12;
