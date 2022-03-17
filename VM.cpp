@@ -21,9 +21,9 @@ bool VM::run() {
   while(keep_running_) {
     const uint32_t current_pc = regs_.get_pc();
     const uint32_t current_instruction = mem_.read_word(current_pc);
-    regs_.set_pc(current_pc+sizeof(uint32_t));
     execute(current_instruction);
     dump();
+    regs_.set_pc(current_pc+sizeof(uint32_t));
   }
   return true;
 }
@@ -228,7 +228,7 @@ bool VM::execute(const uint32_t raw_instruction) {
   case Decode::kLoadUpperImmInstruction:
     break;
   case Decode::kAddUpperImmToPCInstruction:
-    regs_.set(Decode::decode_rd(raw_instruction), (regs_.get_pc() + (Decode::decode_U_imm(raw_instruction)<<12) ));
+    regs_.set(Decode::decode_rd(raw_instruction), (regs_.get_pc() + (Decode::decode_U_imm(raw_instruction)) ));
     break;
 
   case Decode::kEnvironmentCallInstruction:
