@@ -170,6 +170,15 @@ uint16_t decode_U_imm(const uint32_t raw_instruction)
   return raw_instruction >> 12;
 }
 
+uint32_t decode_J_imm(const uint32_t raw_instruction)
+{
+  const uint32_t imm_a = (raw_instruction >> 21) & 0b1111111111;
+  const uint32_t imm_b = (raw_instruction >> 20) & 0b1;
+  const uint32_t imm_c = (raw_instruction >> 12) & 0b11111111;
+  const uint32_t imm_d = (raw_instruction >> 31) & 0b1;
+  return (imm_d << 20) | (imm_c << 12) | (imm_b << 11) | (imm_a << 1);
+}
+
 InstructionType decode_load_I(const uint32_t raw_instruction)
 {
   const uint8_t func3 = decode_func3(raw_instruction);

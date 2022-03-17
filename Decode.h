@@ -104,6 +104,7 @@ namespace Decode {
   uint16_t decode_S_imm(const uint32_t raw_instruction);
   int16_t decode_B_imm(const uint32_t raw_instruction);
   uint16_t decode_U_imm(const uint32_t raw_instruction);
+  uint32_t decode_J_imm(const uint32_t raw_instruction);
 
   uint8_t decode_opcode(const uint32_t raw_instruction);
   uint8_t decode_R_func7(const uint32_t raw_instruction);

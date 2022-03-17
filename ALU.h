@@ -18,6 +18,7 @@ class ALU {
     void SUB (Registers& mstate, uint8_t rd, uint8_t rs1, uint8_t rs2);
     void OR  (Registers& mstate, uint8_t rd, uint8_t rs1, uint8_t rs2);
     void XOR (Registers& mstate, uint8_t rd, uint8_t rs1, uint8_t rs2);
+    void AND (Registers& mstate, uint8_t rd, uint8_t rs1, uint8_t rs2);
     void SLL (Registers& mstate, uint8_t rd, uint8_t rs1, uint8_t rs2);
     void SRL (Registers& mstate, uint8_t rd, uint8_t rs1, uint8_t rs2);
     void SRA (Registers& mstate, uint8_t rd, uint8_t rs1, uint8_t rs2);

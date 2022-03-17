@@ -24,6 +24,10 @@ void ALU::XOR(Registers& mstate, uint8_t rd, uint8_t rs1, uint8_t rs2) {
   mstate.set(rd, mstate.get(rs1) ^ mstate.get(rs2));
 }
 
+void ALU::AND(Registers& mstate, uint8_t rd, uint8_t rs1, uint8_t rs2) {
+  mstate.set(rd, mstate.get(rs1) & mstate.get(rs2));
+}
+
 void ALU::SLL(Registers& mstate, uint8_t rd, uint8_t rs1, uint8_t rs2) {
   mstate.set(rd, mstate.get(rs1) << mstate.get(rs2));
 }
@@ -66,6 +70,11 @@ void ALU::SLLI(Registers& mstate, uint8_t rd, uint8_t rs1, uint16_t imm){
 }
 
 void ALU::SRLI(Registers& mstate, uint8_t rd, uint8_t rs1, uint16_t imm){
+  imm &= 0x000F;
+  mstate.set(rd, mstate.get(rs1) >> imm);
+}
+
+void ALU::SRAI(Registers& mstate, uint8_t rd, uint8_t rs1, uint16_t imm){
   imm &= 0x000F;
   mstate.set(rd, mstate.get(rs1) >> imm);
 }

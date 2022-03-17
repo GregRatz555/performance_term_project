@@ -62,6 +62,82 @@ bool VM::execute(const uint32_t raw_instruction) {
 		Decode::decode_rs1(raw_instruction),
 		Decode::decode_rs2(raw_instruction));
       break;
+    case Decode::kAndInstruction:
+        alu_.AND(regs_, Decode::decode_rd(raw_instruction),
+            Decode::decode_rs1(raw_instruction),
+            Decode::decode_rs2(raw_instruction));
+        break;
+    case Decode::kShiftLeftLogicalInstruction:
+        alu_.SLL(regs_, Decode::decode_rd(raw_instruction),
+            Decode::decode_rs1(raw_instruction),
+            Decode::decode_rs2(raw_instruction));
+        break;
+    case Decode::kShiftRightLogicalInstruction:
+        alu_.SRL(regs_, Decode::decode_rd(raw_instruction),
+            Decode::decode_rs1(raw_instruction),
+            Decode::decode_rs2(raw_instruction));
+        break;
+    case Decode::kShiftRightArithmeticInstruction:
+        alu_.SRA(regs_, Decode::decode_rd(raw_instruction),
+            Decode::decode_rs1(raw_instruction),
+            Decode::decode_rs2(raw_instruction));
+        break;
+    case Decode::kSetLessThanInstruction:
+        alu_.SLT(regs_, Decode::decode_rd(raw_instruction),
+            Decode::decode_rs1(raw_instruction),
+            Decode::decode_rs2(raw_instruction));
+        break;
+    case Decode::kSetLessThanUInstruction:
+        alu_.SLTU(regs_, Decode::decode_rd(raw_instruction),
+            Decode::decode_rs1(raw_instruction),
+            Decode::decode_rs2(raw_instruction));
+        break;
+
+    case Decode::kAddImmediateInstruction:
+        alu_.ADDI(regs_, Decode::decode_rd(raw_instruction),
+            Decode::decode_rs1(raw_instruction),
+            Decode::decode_I_imm(raw_instruction));
+        break;
+    case Decode::kXorImmediateInstruction:
+        alu_.XORI(regs_, Decode::decode_rd(raw_instruction),
+            Decode::decode_rs1(raw_instruction),
+            Decode::decode_I_imm(raw_instruction));
+        break;
+    case Decode::kOrImmediateInstruction:
+        alu_.ORI(regs_, Decode::decode_rd(raw_instruction),
+            Decode::decode_rs1(raw_instruction),
+            Decode::decode_I_imm(raw_instruction));
+        break;
+    case Decode::kAndImmediateInstruction:
+        alu_.ANDI(regs_, Decode::decode_rd(raw_instruction),
+            Decode::decode_rs1(raw_instruction),
+            Decode::decode_I_imm(raw_instruction));
+        break;
+    case Decode::kShiftLeftLogicalImmInstruction:
+        alu_.SLLI(regs_, Decode::decode_rd(raw_instruction),
+            Decode::decode_rs1(raw_instruction),
+            Decode::decode_I_imm(raw_instruction));
+        break;
+    case Decode::kShiftRightLogicalImmInstruction:
+        alu_.SRLI(regs_, Decode::decode_rd(raw_instruction),
+            Decode::decode_rs1(raw_instruction),
+            Decode::decode_I_imm(raw_instruction));
+        break;
+    case Decode::kShiftRightArithmeticImmInstruction:
+        alu_.SRAI(regs_, Decode::decode_rd(raw_instruction),
+            Decode::decode_rs1(raw_instruction),
+            Decode::decode_I_imm(raw_instruction));
+        break;
+    case Decode::kSetLessThanImmInstruction:
+        alu_.SLTI(regs_, Decode::decode_rd(raw_instruction),
+            Decode::decode_rs1(raw_instruction),
+            Decode::decode_I_imm(raw_instruction));
+        break;
+    case Decode::kSetLessThanUImmInstruction:
+        alu_.SLTIU(regs_, Decode::decode_rd(raw_instruction),
+            Decode::decode_rs1(raw_instruction),
+            Decode::decode_I_imm(raw_instruction));
+        break;
 
     case Decode::kLoadByteInstruction:
       mem_.load_byte(regs_, Decode::decode_rd(raw_instruction),
@@ -104,6 +180,7 @@ bool VM::execute(const uint32_t raw_instruction) {
 		Decode::decode_rs2(raw_instruction),
 		Decode::decode_S_imm(raw_instruction));
       break;
+
 	case Decode::kBranchEqualInstruction:
 	  alu_.BEQ(regs_, Decode::decode_rs1(raw_instruction),
 		Decode::decode_rs2(raw_instruction),
@@ -135,9 +212,33 @@ bool VM::execute(const uint32_t raw_instruction) {
 		Decode::decode_B_imm(raw_instruction));
 	  break;
 
-    case Decode::kAddUpperImmToPCInstruction:
-      regs_.set(Decode::decode_rd(raw_instruction), (regs_.get_pc() + (Decode::decode_U_imm(raw_instruction)<<12) ));
-      break;
+  case Decode::kJumpAndLinkInstruction:
+    // rd = PC+4
+    regs_.set(Decode::decode_rd(raw_instruction), regs_.get_pc() + 4);
+    // PC += IMM
+    regs_.set_pc(regs_.get_pc() + Decode::decode_J_imm(raw_instruction));
+    break;
+  case Decode::kJumpAndLinkRegInstruction:
+    //rd = PC+4;
+    regs_.set(Decode::decode_rd(raw_instruction), regs_.get_pc() + 4);
+    //PC = rs1 + imm
+    regs_.set_pc(Decode::decode_rs1(raw_instruction) + Decode::decode_I_imm(raw_instruction));
+    break;
+
+  case Decode::kLoadUpperImmInstruction:
+    break;
+  case Decode::kAddUpperImmToPCInstruction:
+    regs_.set(Decode::decode_rd(raw_instruction), (regs_.get_pc() + (Decode::decode_U_imm(raw_instruction)<<12) ));
+    break;
+
+  case Decode::kEnvironmentCallInstruction:
+    // Transfer control to OS
+    // do nothing
+    break;
+  case Decode::kEnvironmentBreakInstruction:
+    // Transfer control to debugger
+    // do nothing
+    break;
 
     case Decode::kInvalidInstruction:
       // fallthrough
