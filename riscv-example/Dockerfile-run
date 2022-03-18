@@ -1,0 +1,3 @@
+FROM ghcr.io/beaverb1ll/riscv64-unknown-elf:latest
+
+RUN dnf install -y findutils cmake git vim && dnf clean all
