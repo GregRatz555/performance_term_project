@@ -24,7 +24,6 @@ bool VM::run() {
     const uint32_t current_instruction = mem_.read_word(current_pc);
     execute(current_instruction);
     dump();
-    regs_.set_pc(current_pc+sizeof(uint32_t));
   }
   return true;
 }
@@ -33,7 +32,6 @@ bool VM::run(uint32_t instruction_count) {
   for (uint32_t i = 0; i<instruction_count; i++) {
     const uint32_t current_pc = regs_.get_pc();
     const uint32_t current_instruction = mem_.read_word(current_pc);
-    regs_.set_pc(current_pc+4);
     execute(current_instruction);
     dump();
   }
@@ -42,6 +40,8 @@ bool VM::run(uint32_t instruction_count) {
 
 bool VM::execute(const uint32_t raw_instruction) {
   const Decode::InstructionType instruction = Decode::decode(raw_instruction);
+  bool increment_pc = true;
+
   switch(instruction) {
     case Decode::kAddInstruction:
       alu_.ADD(regs_, Decode::decode_rd(raw_instruction), 
@@ -186,31 +186,37 @@ bool VM::execute(const uint32_t raw_instruction) {
 	  alu_.BEQ(regs_, Decode::decode_rs1(raw_instruction),
 		Decode::decode_rs2(raw_instruction),
 		Decode::decode_B_imm(raw_instruction));
+    increment_pc = false;
 	  break;
 	case Decode::kBranchNotEqualInstruction:
 	  alu_.BNE(regs_, Decode::decode_rs1(raw_instruction),
 		Decode::decode_rs2(raw_instruction),
 		Decode::decode_B_imm(raw_instruction));
+    increment_pc = false;
 	  break;
 	case Decode::kBranchLessThanInstruction:
 	  alu_.BLT(regs_, Decode::decode_rs1(raw_instruction),
 		Decode::decode_rs2(raw_instruction),
 		Decode::decode_B_imm(raw_instruction));
+    increment_pc = false;
 	  break;
 	case Decode::kBranchGreaterThanEqualInstruction:
 	  alu_.BGE(regs_, Decode::decode_rs1(raw_instruction),
 		Decode::decode_rs2(raw_instruction),
 		Decode::decode_B_imm(raw_instruction));
+    increment_pc = false;
 	  break;
 	case Decode::kBranchLessThanUInstruction:
 	  alu_.BLTU(regs_, Decode::decode_rs1(raw_instruction),
 		Decode::decode_rs2(raw_instruction),
 		Decode::decode_B_imm(raw_instruction));
+    increment_pc = false;
 	  break;
 	case Decode::kBranchGreaterThanEqualUInstruction:
 	  alu_.BGEU(regs_, Decode::decode_rs1(raw_instruction),
 		Decode::decode_rs2(raw_instruction),
 		Decode::decode_B_imm(raw_instruction));
+    increment_pc = false;
 	  break;
 
   case Decode::kJumpAndLinkInstruction:
@@ -218,17 +224,20 @@ bool VM::execute(const uint32_t raw_instruction) {
     regs_.set(Decode::decode_rd(raw_instruction), regs_.get_pc() + 4);
     // PC += IMM
     regs_.set_pc(regs_.get_pc() + Decode::decode_J_imm(raw_instruction));
+    increment_pc = false;
     break;
   case Decode::kJumpAndLinkRegInstruction:
     //rd = PC+4;
     regs_.set(Decode::decode_rd(raw_instruction), regs_.get_pc() + 4);
     //PC = rs1 + imm
     regs_.set_pc(Decode::decode_rs1(raw_instruction) + Decode::decode_I_imm(raw_instruction));
+    increment_pc = false;
     break;
 
   case Decode::kLoadUpperImmInstruction:
     break;
   case Decode::kAddUpperImmToPCInstruction:
+    // rd = PC + (imm << 12)
     regs_.set(Decode::decode_rd(raw_instruction), (regs_.get_pc() + (Decode::decode_U_imm(raw_instruction)) ));
     break;
 
@@ -247,6 +256,11 @@ bool VM::execute(const uint32_t raw_instruction) {
       throw std::runtime_error("Invalid or unknown instruction id: " +
 			 std::to_string(instruction) + " [" + std::to_string(raw_instruction) + "]");
   }
+
+  if(increment_pc) {
+    regs_.set_pc(regs_.get_pc()+sizeof(uint32_t));
+  }
+
   return true;
 }
 
