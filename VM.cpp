@@ -235,6 +235,8 @@ bool VM::execute(const uint32_t raw_instruction) {
     break;
 
   case Decode::kLoadUpperImmInstruction:
+    // rd = imm << 12
+    regs_.set(Decode::decode_rd(raw_instruction), Decode::decode_U_imm(raw_instruction));
     break;
   case Decode::kAddUpperImmToPCInstruction:
     // rd = PC + (imm << 12)
