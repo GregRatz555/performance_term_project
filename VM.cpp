@@ -230,7 +230,7 @@ bool VM::execute(const uint32_t raw_instruction) {
     //rd = PC+4;
     regs_.set(Decode::decode_rd(raw_instruction), regs_.get_pc() + 4);
     //PC = rs1 + imm
-    regs_.set_pc(Decode::decode_rs1(raw_instruction) + Decode::decode_I_imm(raw_instruction));
+    regs_.set_pc(regs_.get(Decode::decode_rs1(raw_instruction)) + Decode::decode_I_imm(raw_instruction));
     increment_pc = false;
     break;
 
