@@ -254,7 +254,6 @@ void VM::dump_mem(uint32_t front, uint32_t back){
 }
 
 void VM::load_elf(const std::string &filename){
-  printf("Loading Bin File: %s!\n", filename.c_str());
 
   std::ifstream input_file(filename, std::ios::binary);
   input_file.seekg(0, std::ios::end);

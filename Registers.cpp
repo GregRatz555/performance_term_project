@@ -29,7 +29,6 @@ uint8_t Registers::set(const uint8_t rd, const uint32_t value)
     return 1;
   }
   if (rd != 0) {
-    printf("Set Reg %d: %d\n", rd, value);
     regs_[rd] = value;
   }
   return 0;
@@ -45,7 +44,6 @@ uint32_t Registers::get(const uint8_t rd) const
     std::cerr << "At pc = " << pc_;
     exit(1); // TODO get better error system
   }
-  printf("Get reg %d: %d\n", rd, regs_[rd]);
   if (rd == 0) return 0;
   return regs_[rd];
 }
