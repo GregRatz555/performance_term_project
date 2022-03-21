@@ -15,13 +15,13 @@
 #include "Registers.h"
 
 class VM {
-  Memory mem_{64*1024};
+  Memory mem_;
   Registers regs_;
   ALU alu_;
   std::atomic<bool> keep_running_{true};
 
   public:
-    VM();
+    VM(const size_t mem_size);
     bool execute(const uint32_t raw_instruction);
     bool run();
     bool run(uint32_t instruction_count);

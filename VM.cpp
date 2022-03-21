@@ -8,7 +8,8 @@
 
 #include "Decode.h"
 
-VM::VM()
+VM::VM(const size_t mem_size)
+ : mem_(mem_size)
 {
 }
 
