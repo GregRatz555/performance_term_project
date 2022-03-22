@@ -90,7 +90,6 @@ namespace Decode {
     kRegister29,
     kRegister30,
     kRegister31,
-    kRegister32,
     kNumRegisters
   };
 

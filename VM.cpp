@@ -13,7 +13,7 @@ VM::VM(const size_t mem_size)
 {
 }
 
-void VM::dump()
+void VM::dump() const
 {
   regs_.dump();
 }
@@ -284,4 +284,9 @@ void VM::load_elf(const std::string &filename){
   for(int i = 0; i < size; i++) {
     mem_.store(i, data[i]);
   }
+}
+
+const RegisterValues& VM::get_regs() const
+{
+  return regs_.get_values();
 }
