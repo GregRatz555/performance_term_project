@@ -4,6 +4,21 @@
 #include <array>
 #include <cstdint>
 
+#include "Decode.h"
+
+struct RegisterValues
+{
+  std::array<uint32_t, Decode::kNumRegisters> regs; // Register
+  uint32_t pc = 0;
+
+  inline bool operator==(const RegisterValues& lhs) const {
+    return pc == lhs.pc &&
+      regs == lhs.regs;
+  }
+
+  inline bool operator!=(const RegisterValues& lhs) const { return !(lhs == *this); }
+};
+
 class Registers {
 
  public:
@@ -14,9 +29,9 @@ class Registers {
   uint8_t set(const uint8_t rd, uint32_t value);
   uint32_t get(const uint8_t rd) const;
   void dump() const;
+  const RegisterValues& get_values() const;
 
  private:
-  std::array<uint32_t, 32> regs_; // Register
-  uint32_t pc_ = 0;
+  RegisterValues regs_;
 };
 #endif

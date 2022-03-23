@@ -9,7 +9,7 @@ int main(int argc, char *argv[]) {
     return -1;
   }
 
-  VM rv32i;
+  VM rv32i(64*1024);
   rv32i.load_elf(argv[1]);
   rv32i.dump_mem(0,12);
   rv32i.run();

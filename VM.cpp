@@ -8,11 +8,12 @@
 
 #include "Decode.h"
 
-VM::VM()
+VM::VM(const size_t mem_size)
+ : mem_(mem_size)
 {
 }
 
-void VM::dump()
+void VM::dump() const
 {
   regs_.dump();
 }
@@ -21,7 +22,6 @@ bool VM::run() {
   while(keep_running_) {
     const uint32_t current_pc = regs_.get_pc();
     const uint32_t current_instruction = mem_.read_word(current_pc);
-    regs_.set_pc(current_pc+sizeof(uint32_t));
     execute(current_instruction);
     dump();
   }
@@ -32,7 +32,6 @@ bool VM::run(uint32_t instruction_count) {
   for (uint32_t i = 0; i<instruction_count; i++) {
     const uint32_t current_pc = regs_.get_pc();
     const uint32_t current_instruction = mem_.read_word(current_pc);
-    regs_.set_pc(current_pc+4);
     execute(current_instruction);
     dump();
   }
@@ -41,6 +40,8 @@ bool VM::run(uint32_t instruction_count) {
 
 bool VM::execute(const uint32_t raw_instruction) {
   const Decode::InstructionType instruction = Decode::decode(raw_instruction);
+  bool increment_pc = true;
+
   switch(instruction) {
     case Decode::kAddInstruction:
       alu_.ADD(regs_, Decode::decode_rd(raw_instruction), 
@@ -62,6 +63,82 @@ bool VM::execute(const uint32_t raw_instruction) {
 		Decode::decode_rs1(raw_instruction),
 		Decode::decode_rs2(raw_instruction));
       break;
+    case Decode::kAndInstruction:
+        alu_.AND(regs_, Decode::decode_rd(raw_instruction),
+            Decode::decode_rs1(raw_instruction),
+            Decode::decode_rs2(raw_instruction));
+        break;
+    case Decode::kShiftLeftLogicalInstruction:
+        alu_.SLL(regs_, Decode::decode_rd(raw_instruction),
+            Decode::decode_rs1(raw_instruction),
+            Decode::decode_rs2(raw_instruction));
+        break;
+    case Decode::kShiftRightLogicalInstruction:
+        alu_.SRL(regs_, Decode::decode_rd(raw_instruction),
+            Decode::decode_rs1(raw_instruction),
+            Decode::decode_rs2(raw_instruction));
+        break;
+    case Decode::kShiftRightArithmeticInstruction:
+        alu_.SRA(regs_, Decode::decode_rd(raw_instruction),
+            Decode::decode_rs1(raw_instruction),
+            Decode::decode_rs2(raw_instruction));
+        break;
+    case Decode::kSetLessThanInstruction:
+        alu_.SLT(regs_, Decode::decode_rd(raw_instruction),
+            Decode::decode_rs1(raw_instruction),
+            Decode::decode_rs2(raw_instruction));
+        break;
+    case Decode::kSetLessThanUInstruction:
+        alu_.SLTU(regs_, Decode::decode_rd(raw_instruction),
+            Decode::decode_rs1(raw_instruction),
+            Decode::decode_rs2(raw_instruction));
+        break;
+
+    case Decode::kAddImmediateInstruction:
+        alu_.ADDI(regs_, Decode::decode_rd(raw_instruction),
+            Decode::decode_rs1(raw_instruction),
+            Decode::decode_I_imm(raw_instruction));
+        break;
+    case Decode::kXorImmediateInstruction:
+        alu_.XORI(regs_, Decode::decode_rd(raw_instruction),
+            Decode::decode_rs1(raw_instruction),
+            Decode::decode_I_imm(raw_instruction));
+        break;
+    case Decode::kOrImmediateInstruction:
+        alu_.ORI(regs_, Decode::decode_rd(raw_instruction),
+            Decode::decode_rs1(raw_instruction),
+            Decode::decode_I_imm(raw_instruction));
+        break;
+    case Decode::kAndImmediateInstruction:
+        alu_.ANDI(regs_, Decode::decode_rd(raw_instruction),
+            Decode::decode_rs1(raw_instruction),
+            Decode::decode_I_imm(raw_instruction));
+        break;
+    case Decode::kShiftLeftLogicalImmInstruction:
+        alu_.SLLI(regs_, Decode::decode_rd(raw_instruction),
+            Decode::decode_rs1(raw_instruction),
+            Decode::decode_I_imm(raw_instruction));
+        break;
+    case Decode::kShiftRightLogicalImmInstruction:
+        alu_.SRLI(regs_, Decode::decode_rd(raw_instruction),
+            Decode::decode_rs1(raw_instruction),
+            Decode::decode_I_imm(raw_instruction));
+        break;
+    case Decode::kShiftRightArithmeticImmInstruction:
+        alu_.SRAI(regs_, Decode::decode_rd(raw_instruction),
+            Decode::decode_rs1(raw_instruction),
+            Decode::decode_I_imm(raw_instruction));
+        break;
+    case Decode::kSetLessThanImmInstruction:
+        alu_.SLTI(regs_, Decode::decode_rd(raw_instruction),
+            Decode::decode_rs1(raw_instruction),
+            Decode::decode_I_imm(raw_instruction));
+        break;
+    case Decode::kSetLessThanUImmInstruction:
+        alu_.SLTIU(regs_, Decode::decode_rd(raw_instruction),
+            Decode::decode_rs1(raw_instruction),
+            Decode::decode_I_imm(raw_instruction));
+        break;
 
     case Decode::kLoadByteInstruction:
       mem_.load_byte(regs_, Decode::decode_rd(raw_instruction),
@@ -104,40 +181,76 @@ bool VM::execute(const uint32_t raw_instruction) {
 		Decode::decode_rs2(raw_instruction),
 		Decode::decode_S_imm(raw_instruction));
       break;
+
 	case Decode::kBranchEqualInstruction:
 	  alu_.BEQ(regs_, Decode::decode_rs1(raw_instruction),
 		Decode::decode_rs2(raw_instruction),
 		Decode::decode_B_imm(raw_instruction));
+    increment_pc = false;
 	  break;
 	case Decode::kBranchNotEqualInstruction:
 	  alu_.BNE(regs_, Decode::decode_rs1(raw_instruction),
 		Decode::decode_rs2(raw_instruction),
 		Decode::decode_B_imm(raw_instruction));
+    increment_pc = false;
 	  break;
 	case Decode::kBranchLessThanInstruction:
 	  alu_.BLT(regs_, Decode::decode_rs1(raw_instruction),
 		Decode::decode_rs2(raw_instruction),
 		Decode::decode_B_imm(raw_instruction));
+    increment_pc = false;
 	  break;
 	case Decode::kBranchGreaterThanEqualInstruction:
 	  alu_.BGE(regs_, Decode::decode_rs1(raw_instruction),
 		Decode::decode_rs2(raw_instruction),
 		Decode::decode_B_imm(raw_instruction));
+    increment_pc = false;
 	  break;
 	case Decode::kBranchLessThanUInstruction:
 	  alu_.BLTU(regs_, Decode::decode_rs1(raw_instruction),
 		Decode::decode_rs2(raw_instruction),
 		Decode::decode_B_imm(raw_instruction));
+    increment_pc = false;
 	  break;
 	case Decode::kBranchGreaterThanEqualUInstruction:
 	  alu_.BGEU(regs_, Decode::decode_rs1(raw_instruction),
 		Decode::decode_rs2(raw_instruction),
 		Decode::decode_B_imm(raw_instruction));
+    increment_pc = false;
 	  break;
 
-    case Decode::kAddUpperImmToPCInstruction:
-      regs_.set(Decode::decode_rd(raw_instruction), (regs_.get_pc() + (Decode::decode_U_imm(raw_instruction)<<12) ));
-      break;
+  case Decode::kJumpAndLinkInstruction:
+    // rd = PC+4
+    regs_.set(Decode::decode_rd(raw_instruction), regs_.get_pc() + 4);
+    // PC += IMM
+    regs_.set_pc(regs_.get_pc() + Decode::decode_J_imm(raw_instruction));
+    increment_pc = false;
+    break;
+  case Decode::kJumpAndLinkRegInstruction:
+    //rd = PC+4;
+    regs_.set(Decode::decode_rd(raw_instruction), regs_.get_pc() + 4);
+    //PC = rs1 + imm
+    regs_.set_pc(regs_.get(Decode::decode_rs1(raw_instruction)) + Decode::decode_I_imm(raw_instruction));
+    increment_pc = false;
+    break;
+
+  case Decode::kLoadUpperImmInstruction:
+    // rd = imm << 12
+    regs_.set(Decode::decode_rd(raw_instruction), Decode::decode_U_imm(raw_instruction));
+    break;
+  case Decode::kAddUpperImmToPCInstruction:
+    // rd = PC + (imm << 12)
+    regs_.set(Decode::decode_rd(raw_instruction), (regs_.get_pc() + (Decode::decode_U_imm(raw_instruction)) ));
+    break;
+
+  case Decode::kEnvironmentCallInstruction:
+    // Transfer control to OS
+    // do nothing
+    break;
+  case Decode::kEnvironmentBreakInstruction:
+    // Transfer control to debugger
+    // do nothing
+    break;
 
     case Decode::kInvalidInstruction:
       // fallthrough
@@ -145,6 +258,11 @@ bool VM::execute(const uint32_t raw_instruction) {
       throw std::runtime_error("Invalid or unknown instruction id: " +
 			 std::to_string(instruction) + " [" + std::to_string(raw_instruction) + "]");
   }
+
+  if(increment_pc) {
+    regs_.set_pc(regs_.get_pc()+sizeof(uint32_t));
+  }
+
   return true;
 }
 
@@ -153,7 +271,6 @@ void VM::dump_mem(uint32_t front, uint32_t back){
 }
 
 void VM::load_elf(const std::string &filename){
-  printf("Loading Bin File: %s!\n", filename.c_str());
 
   std::ifstream input_file(filename, std::ios::binary);
   input_file.seekg(0, std::ios::end);
@@ -167,4 +284,9 @@ void VM::load_elf(const std::string &filename){
   for(int i = 0; i < size; i++) {
     mem_.store(i, data[i]);
   }
+}
+
+const RegisterValues& VM::get_regs() const
+{
+  return regs_.get_values();
 }

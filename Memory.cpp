@@ -13,7 +13,6 @@ uint8_t Memory::init(uint32_t memsize){
 	if (Memory::storage != 0) {
 		// Avoid memleak and use-after-free
 		// If for some reason a memory is re-init'ed, lose the old
-		std::cout << "Memory re-init. Core dumped." << std::endl;
 		free(Memory::storage);
 		Memory::storage = 0;
 	}
@@ -22,14 +21,12 @@ uint8_t Memory::init(uint32_t memsize){
 	Memory::storage = (uint8_t*)calloc(memsize, sizeof(uint8_t));
 	if (Memory::storage == NULL) {
 		// In case of failure, reset attributes
-		std::cout << "Storage Init failed!";
 		Memory::addr_range[0] = 0x0000;
 		Memory::addr_range[1] = 0x0000;
 		Memory::size = 0;
 		return 1;
 	} else {
 		// Else update attributes
-		std::cout << "Storage Init Success!";
 		Memory::addr_range[0] = 0x0000;
 		Memory::addr_range[1] = 0x0000 + memsize;
 		Memory::size = memsize;

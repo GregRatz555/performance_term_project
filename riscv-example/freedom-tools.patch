@@ -1,0 +1,12 @@
+diff --git a/modules/freedom-gcc-metal/Makefile b/modules/freedom-gcc-metal/Makefile
+index 2e86006..3b1ac0a 100644
+--- a/modules/freedom-gcc-metal/Makefile
++++ b/modules/freedom-gcc-metal/Makefile
+@@ -55,6 +55,7 @@ BARE_METAL_MULTILIBS_GEN := \
+        rv32emc_zba_zbb-ilp32e-- \
+        rv32emac-ilp32e-- \
+        rv32emac_zba_zbb-ilp32e-- \
++        rv32i-ilp32-- \
+        rv32ic-ilp32-- \
+        rv32ic_zba_zbb-ilp32-- \
+        rv32iac-ilp32-- \

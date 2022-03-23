@@ -1,0 +1,4 @@
+FROM centos:centos7
+
+RUN yum install -y git make gcc-c++ tcl bzip2 texinfo bison flex zlib-devel findutils diffutils texinfo-tex && yum clean all
+RUN make gcc-metal-package
