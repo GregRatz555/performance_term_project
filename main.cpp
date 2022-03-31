@@ -10,8 +10,9 @@ int main(int argc, char *argv[]) {
   }
 
   VM rv32i(64*1024);
+  //rv32i.load_bin(argv[1]);
   rv32i.load_elf(argv[1]);
-  rv32i.dump_mem(0,12);
+  rv32i.dump_mem(0,20);
   rv32i.run();
   return 0;
 }
