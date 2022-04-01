@@ -290,3 +290,7 @@ const RegisterValues& VM::get_regs() const
 {
   return regs_.get_values();
 }
+void VM::set_regs(const RegisterValues &new_regs)
+{
+  regs_.set_values(new_regs);
+}

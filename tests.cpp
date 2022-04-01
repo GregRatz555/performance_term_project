@@ -434,3 +434,34 @@ TEST_F(AluTest, xor_positive) {
   EXPECT_EQ(vm_.get_regs(), values_);
 }
 
+TEST_F(AluTest, shift_right_logical) {
+  RegisterValues input;
+
+  input.regs[Decode::kRegister1] = -5;
+  input.regs[Decode::kRegister2] = 1;
+  vm_.set_regs(input);
+
+  values_.regs[Decode::kRegister1] = -5;
+  values_.regs[Decode::kRegister2] = 1;
+  values_.regs[Decode::kRegister3] = 0x7FFFFFFD;
+  values_.pc += 4;
+  vm_.execute(0x0020d1b3); // srl gp,ra,sp
+  EXPECT_EQ(vm_.get_regs(), values_);
+}
+
+TEST_F(AluTest, shift_right_arithmedic) {
+  RegisterValues input;
+
+  input.regs[Decode::kRegister1] = -5;
+  input.regs[Decode::kRegister2] = 1;
+  vm_.set_regs(input);
+
+
+  values_.regs[Decode::kRegister1] = -5;
+  values_.regs[Decode::kRegister2] = 1;
+  values_.regs[Decode::kRegister3] = -3;
+  values_.pc += 4;
+
+  vm_.execute(0x4020d1b3); //           sra gp,ra,sp
+  EXPECT_EQ(vm_.get_regs(), values_);
+}

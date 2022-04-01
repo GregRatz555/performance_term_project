@@ -11,7 +11,13 @@ struct RegisterValues
   std::array<uint32_t, Decode::kNumRegisters> regs; // Register
   uint32_t pc = 0;
 
-  inline bool operator==(const RegisterValues& lhs) const {
+  RegisterValues()
+  {
+    regs.fill(0);
+  }
+
+  inline bool operator==(const RegisterValues& lhs) const
+  {
     return pc == lhs.pc &&
       regs == lhs.regs;
   }
@@ -30,6 +36,7 @@ class Registers {
   uint32_t get(const uint8_t rd) const;
   void dump() const;
   const RegisterValues& get_values() const;
+  void set_values(const RegisterValues &new_values);
 
  private:
   RegisterValues regs_;

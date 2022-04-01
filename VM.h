@@ -29,6 +29,7 @@ class VM {
     void dump_mem(uint32_t front, uint32_t back);
     void load_elf(const std::string &filename);
     const RegisterValues& get_regs() const;
+    void set_regs(const RegisterValues &new_regs);
 };
 
 #endif

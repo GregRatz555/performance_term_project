@@ -30,10 +30,11 @@ void ALU::SLL(Registers& mstate, uint8_t rd, uint8_t rs1, uint8_t rs2) {
 
 void ALU::SRL(Registers& mstate, uint8_t rd, uint8_t rs1, uint8_t rs2) {
   mstate.set(rd, mstate.get(rs1) >> mstate.get(rs2));
+  mstate.set(rd, static_cast<uint32_t>(mstate.get(rs1)) >> mstate.get(rs2));
 }
 
 void ALU::SRA(Registers& mstate, uint8_t rd, uint8_t rs1, uint8_t rs2) {
-  mstate.set(rd, mstate.get(rs1) >> mstate.get(rs2));
+  mstate.set(rd, static_cast<int32_t>(mstate.get(rs1)) >> mstate.get(rs2));
 }
 
 void ALU::SLT(Registers& mstate, uint8_t rd, uint8_t rs1, uint8_t rs2) {
