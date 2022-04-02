@@ -265,7 +265,8 @@ bool VM::execute(const uint32_t raw_instruction) {
   return true;
 }
 
-void VM::dump_mem(uint32_t front, uint32_t back){
+void VM::dump_mem(uint32_t front, uint32_t back) const
+{
        mem_.debug_dump_range(front, back);
 }
 
