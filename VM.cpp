@@ -183,40 +183,34 @@ bool VM::execute(const uint32_t raw_instruction) {
       break;
 
 	case Decode::kBranchEqualInstruction:
-	  alu_.BEQ(regs_, Decode::decode_rs1(raw_instruction),
+	  increment_pc = alu_.BEQ(regs_, Decode::decode_rs1(raw_instruction),
 		Decode::decode_rs2(raw_instruction),
 		Decode::decode_B_imm(raw_instruction));
-    increment_pc = false;
 	  break;
 	case Decode::kBranchNotEqualInstruction:
-	  alu_.BNE(regs_, Decode::decode_rs1(raw_instruction),
+	  increment_pc = alu_.BNE(regs_, Decode::decode_rs1(raw_instruction),
 		Decode::decode_rs2(raw_instruction),
 		Decode::decode_B_imm(raw_instruction));
-    increment_pc = false;
 	  break;
 	case Decode::kBranchLessThanInstruction:
-	  alu_.BLT(regs_, Decode::decode_rs1(raw_instruction),
+	  increment_pc = alu_.BLT(regs_, Decode::decode_rs1(raw_instruction),
 		Decode::decode_rs2(raw_instruction),
 		Decode::decode_B_imm(raw_instruction));
-    increment_pc = false;
 	  break;
 	case Decode::kBranchGreaterThanEqualInstruction:
-	  alu_.BGE(regs_, Decode::decode_rs1(raw_instruction),
+	  increment_pc = alu_.BGE(regs_, Decode::decode_rs1(raw_instruction),
 		Decode::decode_rs2(raw_instruction),
 		Decode::decode_B_imm(raw_instruction));
-    increment_pc = false;
 	  break;
 	case Decode::kBranchLessThanUInstruction:
-	  alu_.BLTU(regs_, Decode::decode_rs1(raw_instruction),
+	  increment_pc = alu_.BLTU(regs_, Decode::decode_rs1(raw_instruction),
 		Decode::decode_rs2(raw_instruction),
 		Decode::decode_B_imm(raw_instruction));
-    increment_pc = false;
 	  break;
 	case Decode::kBranchGreaterThanEqualUInstruction:
-	  alu_.BGEU(regs_, Decode::decode_rs1(raw_instruction),
+	  increment_pc = alu_.BGEU(regs_, Decode::decode_rs1(raw_instruction),
 		Decode::decode_rs2(raw_instruction),
 		Decode::decode_B_imm(raw_instruction));
-    increment_pc = false;
 	  break;
 
   case Decode::kJumpAndLinkInstruction:
