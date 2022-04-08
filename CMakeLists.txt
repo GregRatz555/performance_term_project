@@ -5,6 +5,11 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(CMAKE_CXX_STANDARD 14)
 
+if(NOT CMAKE_BUILD_TYPE)
+  message(STATUS "No build type specified. Defaulting to RELWITHDEBINFO")
+  set(CMAKE_BUILD_TYPE RELWITHDEBINFO CACHE STRING "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel ..." FORCE)
+endif()
+
 enable_testing()
 find_package(GTest REQUIRED)
 

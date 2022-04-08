@@ -4,7 +4,6 @@
 
 Registers::Registers()
 {
-  regs_.regs.fill(0);
 }
 
 uint32_t Registers::get_pc() const
@@ -58,4 +57,9 @@ void Registers::dump() const
 const RegisterValues& Registers::get_values() const
 {
   return regs_;
+}
+
+void Registers::set_values(const RegisterValues &new_values)
+{
+  regs_ = new_values;
 }

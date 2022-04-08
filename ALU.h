@@ -35,12 +35,12 @@ class ALU {
 	void SLTI (Registers& mstate, uint8_t rd, uint8_t rs1, int32_t imm);
 	void SLTIU(Registers& mstate, uint8_t rd, uint8_t rs1, int32_t imm);
 	// B-type functions
-	void BEQ (Registers& mstate, uint8_t rs1, uint8_t rs2, int32_t imm);
-	void BNE (Registers& mstate, uint8_t rs1, uint8_t rs2, int32_t imm);
-	void BLT (Registers& mstate, uint8_t rs1, uint8_t rs2, int32_t imm);
-	void BGE (Registers& mstate, uint8_t rs1, uint8_t rs2, int32_t imm);
-	void BLTU(Registers& mstate, uint8_t rs1, uint8_t rs2, int32_t imm);
-	void BGEU(Registers& mstate, uint8_t rs1, uint8_t rs2, int32_t imm);
+	bool BEQ (Registers& mstate, uint8_t rs1, uint8_t rs2, int32_t imm);
+	bool BNE (Registers& mstate, uint8_t rs1, uint8_t rs2, int32_t imm);
+	bool BLT (Registers& mstate, uint8_t rs1, uint8_t rs2, int32_t imm);
+	bool BGE (Registers& mstate, uint8_t rs1, uint8_t rs2, int32_t imm);
+	bool BLTU(Registers& mstate, uint8_t rs1, uint8_t rs2, int32_t imm);
+	bool BGEU(Registers& mstate, uint8_t rs1, uint8_t rs2, int32_t imm);
 	
 };
 

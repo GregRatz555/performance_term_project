@@ -30,10 +30,11 @@ void ALU::SLL(Registers& mstate, uint8_t rd, uint8_t rs1, uint8_t rs2) {
 
 void ALU::SRL(Registers& mstate, uint8_t rd, uint8_t rs1, uint8_t rs2) {
   mstate.set(rd, mstate.get(rs1) >> mstate.get(rs2));
+  mstate.set(rd, static_cast<uint32_t>(mstate.get(rs1)) >> mstate.get(rs2));
 }
 
 void ALU::SRA(Registers& mstate, uint8_t rd, uint8_t rs1, uint8_t rs2) {
-  mstate.set(rd, mstate.get(rs1) >> mstate.get(rs2));
+  mstate.set(rd, static_cast<int32_t>(mstate.get(rs1)) >> mstate.get(rs2));
 }
 
 void ALU::SLT(Registers& mstate, uint8_t rd, uint8_t rs1, uint8_t rs2) {
@@ -83,38 +84,50 @@ void ALU::SLTIU(Registers& mstate, uint8_t rd, uint8_t rs1, int32_t imm){
   mstate.set(rd, ((uint32_t)mstate.get(rs1) < imm) ? 1 : 0);
 }
 
-void ALU::BEQ(Registers& mstate, uint8_t rs1, uint8_t rs2, int32_t imm){
+bool ALU::BEQ(Registers& mstate, uint8_t rs1, uint8_t rs2, int32_t imm){
 	if (mstate.get(rs1) == mstate.get(rs2)) {
-		mstate.set_pc(mstate.get_pc() + imm);
+		mstate.set_pc(static_cast<int32_t>(mstate.get_pc()) + imm);
+    return false;
 	}
+  return true;
 }
 
-void ALU::BNE(Registers& mstate, uint8_t rs1, uint8_t rs2, int32_t imm){
+bool ALU::BNE(Registers& mstate, uint8_t rs1, uint8_t rs2, int32_t imm){
 	if (mstate.get(rs1) != mstate.get(rs2)) {
-		mstate.set_pc(mstate.get_pc() + imm);
+		mstate.set_pc(static_cast<int32_t>(mstate.get_pc()) + imm);
+    return false;
 	}
+  return true;
 }
 
-void ALU::BLT(Registers& mstate, uint8_t rs1, uint8_t rs2, int32_t imm){
+bool ALU::BLT(Registers& mstate, uint8_t rs1, uint8_t rs2, int32_t imm){
 	if ((int32_t)mstate.get(rs1) < (int32_t)mstate.get(rs2)) {
-		mstate.set_pc(mstate.get_pc() + imm);
+		mstate.set_pc(static_cast<int32_t>(mstate.get_pc()) + imm);
+    return false;
 	}
+  return true;
 }
 
-void ALU::BGE(Registers& mstate, uint8_t rs1, uint8_t rs2, int32_t imm){
+bool ALU::BGE(Registers& mstate, uint8_t rs1, uint8_t rs2, int32_t imm){
 	if ((int32_t)mstate.get(rs1) >= (int32_t)mstate.get(rs2)) {
-		mstate.set_pc(mstate.get_pc() + imm);
+		mstate.set_pc(static_cast<int32_t>(mstate.get_pc()) + imm);
+    return false;
 	}
+  return true;
 }
 
-void ALU::BLTU(Registers& mstate, uint8_t rs1, uint8_t rs2, int32_t imm){
+bool ALU::BLTU(Registers& mstate, uint8_t rs1, uint8_t rs2, int32_t imm){
 	if (mstate.get(rs1) < mstate.get(rs2)) {
-		mstate.set_pc(mstate.get_pc() + imm);
+		mstate.set_pc(static_cast<int32_t>(mstate.get_pc()) + imm);
+    return false;
 	}
+  return true;
 }
 
-void ALU::BGEU(Registers& mstate, uint8_t rs1, uint8_t rs2, int32_t imm){
+bool ALU::BGEU(Registers& mstate, uint8_t rs1, uint8_t rs2, int32_t imm){
 	if (mstate.get(rs1) >= mstate.get(rs2)) {
-		mstate.set_pc(mstate.get_pc() + imm);
+		mstate.set_pc(static_cast<int32_t>(mstate.get_pc()) + imm);
+    return false;
 	}
+  return true;
 }

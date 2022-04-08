@@ -34,11 +34,11 @@ uint8_t Memory::init(uint32_t memsize){
 	}
 }
 
-uint8_t Memory::check_address(uint32_t address){
+uint8_t Memory::check_address(uint32_t address) const {
 	return ((address >= addr_range[0]) && (address < addr_range[1])) ? 0 : 1;
 }
 
-uint8_t Memory::load(uint32_t req_address){
+uint8_t Memory::load(uint32_t req_address) const {
 	if (Memory::check_address(req_address) == 0) {
 		return Memory::storage[req_address];
 	} else {
@@ -132,7 +132,7 @@ void Memory::write_word(uint32_t req_address, uint32_t value)
   reinterpret_cast<uint32_t*>(storage)[offset] = value;
 }
 
-void Memory::debug_dump_range(uint32_t front, uint32_t back){
+void Memory::debug_dump_range(uint32_t front, uint32_t back) const{
 	for (uint32_t i = front; i < back; i++){
 		uint8_t next = Memory::load(i);
 		printf("MEM[%u] = [%02X]\n", i, next);

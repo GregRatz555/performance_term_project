@@ -183,40 +183,34 @@ bool VM::execute(const uint32_t raw_instruction) {
       break;
 
 	case Decode::kBranchEqualInstruction:
-	  alu_.BEQ(regs_, Decode::decode_rs1(raw_instruction),
+	  increment_pc = alu_.BEQ(regs_, Decode::decode_rs1(raw_instruction),
 		Decode::decode_rs2(raw_instruction),
 		Decode::decode_B_imm(raw_instruction));
-    increment_pc = false;
 	  break;
 	case Decode::kBranchNotEqualInstruction:
-	  alu_.BNE(regs_, Decode::decode_rs1(raw_instruction),
+	  increment_pc = alu_.BNE(regs_, Decode::decode_rs1(raw_instruction),
 		Decode::decode_rs2(raw_instruction),
 		Decode::decode_B_imm(raw_instruction));
-    increment_pc = false;
 	  break;
 	case Decode::kBranchLessThanInstruction:
-	  alu_.BLT(regs_, Decode::decode_rs1(raw_instruction),
+	  increment_pc = alu_.BLT(regs_, Decode::decode_rs1(raw_instruction),
 		Decode::decode_rs2(raw_instruction),
 		Decode::decode_B_imm(raw_instruction));
-    increment_pc = false;
 	  break;
 	case Decode::kBranchGreaterThanEqualInstruction:
-	  alu_.BGE(regs_, Decode::decode_rs1(raw_instruction),
+	  increment_pc = alu_.BGE(regs_, Decode::decode_rs1(raw_instruction),
 		Decode::decode_rs2(raw_instruction),
 		Decode::decode_B_imm(raw_instruction));
-    increment_pc = false;
 	  break;
 	case Decode::kBranchLessThanUInstruction:
-	  alu_.BLTU(regs_, Decode::decode_rs1(raw_instruction),
+	  increment_pc = alu_.BLTU(regs_, Decode::decode_rs1(raw_instruction),
 		Decode::decode_rs2(raw_instruction),
 		Decode::decode_B_imm(raw_instruction));
-    increment_pc = false;
 	  break;
 	case Decode::kBranchGreaterThanEqualUInstruction:
-	  alu_.BGEU(regs_, Decode::decode_rs1(raw_instruction),
+	  increment_pc = alu_.BGEU(regs_, Decode::decode_rs1(raw_instruction),
 		Decode::decode_rs2(raw_instruction),
 		Decode::decode_B_imm(raw_instruction));
-    increment_pc = false;
 	  break;
 
   case Decode::kJumpAndLinkInstruction:
@@ -226,12 +220,17 @@ bool VM::execute(const uint32_t raw_instruction) {
     regs_.set_pc(regs_.get_pc() + Decode::decode_J_imm(raw_instruction));
     increment_pc = false;
     break;
-  case Decode::kJumpAndLinkRegInstruction:
+  case Decode::kJumpAndLinkRegInstruction: {
+      // read state now before potentially modified below
+    const uint32_t rs1 = regs_.get(Decode::decode_rs1(raw_instruction));
+
     //rd = PC+4;
     regs_.set(Decode::decode_rd(raw_instruction), regs_.get_pc() + 4);
     //PC = rs1 + imm
-    regs_.set_pc(regs_.get(Decode::decode_rs1(raw_instruction)) + Decode::decode_I_imm(raw_instruction));
+    regs_.set_pc(rs1 + Decode::decode_I_imm(raw_instruction));
+
     increment_pc = false;
+    }
     break;
 
   case Decode::kLoadUpperImmInstruction:
@@ -266,7 +265,8 @@ bool VM::execute(const uint32_t raw_instruction) {
   return true;
 }
 
-void VM::dump_mem(uint32_t front, uint32_t back){
+void VM::dump_mem(uint32_t front, uint32_t back) const
+{
        mem_.debug_dump_range(front, back);
 }
 
@@ -289,4 +289,8 @@ void VM::load_elf(const std::string &filename){
 const RegisterValues& VM::get_regs() const
 {
   return regs_.get_values();
+}
+void VM::set_regs(const RegisterValues &new_regs)
+{
+  regs_.set_values(new_regs);
 }
