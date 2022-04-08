@@ -1,0 +1,35 @@
+openocd -f board/esp32c3-builtin.cfg
+
+
+riscv32-esp-elf-gdb -x ./gdbinit build/src/rv_fib
+
+# Single step instruction
+(gdb) stepi
+
+# Show PC and current instruction in hex
+(gdb) x $pc
+
+# Show all registers
+(gdb) info registers
+
+# Show disassembled code
+(gdb) disassemble
+
+# Load the elf
+(gdb) load
+Loading section .vectors, size 0x100 lma 0x20000000
+Loading section .text, size 0x5a0 lma 0x20000100
+Loading section .data, size 0x18 lma 0x200006a0
+Start address 0x2000061c, load size 1720
+Transfer rate: 22 KB/sec, 573 bytes/write.
+
+# Keep running
+(gdb) continue
+
+
+
+# How to program elf into flash
+esptool.py --chip ESP32C3 elf2image riscv-example/build/src/rv_fib
+esptool.py --chip ESP32C3 image_info riscv-example/build/src/rv_fib.bin
+esptool.py write_flash --flash_mode dio --flash_freq 80m --flash_size 2MB 0x0 riscv-example/build/src/rv_fib.bin
+
