@@ -1,6 +1,7 @@
 	addi	zero,zero,0
 kernel:
-	addi	sp,zero,1536
+        lui     sp,%hi(__stack_top)
+        addi    sp,sp,%lo(__stack_top)
 	call	main
 	addi	zero,zero,0
 	mv      s1,a0
