@@ -149,6 +149,12 @@ int32_t sign_extend(const uint32_t orig_num, const uint8_t num_bits_in_orig_num)
   return (orig_num ^ m) - m;
 }
 
+int32_t decode_LW_imm(const uint32_t raw_instruction)
+{
+  const uint32_t a = (raw_instruction >> 20) & 0b111111111111;
+  return a;
+}
+
 int32_t decode_I_imm(const uint32_t raw_instruction)
 {
   const uint32_t a = (raw_instruction >> 20) & 0b111111111111;
@@ -173,7 +179,7 @@ int32_t decode_B_imm(const uint32_t raw_instruction)
   return sign_extend(full, 13);
 }
 
-int32_t decode_U_imm(const uint32_t raw_instruction)
+uint32_t decode_U_imm(const uint32_t raw_instruction)
 {
   return raw_instruction & 0xFFFFF000;
 }

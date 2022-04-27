@@ -1,4 +1,6 @@
 #include <gtest/gtest.h>
+#include <chrono>
+#include <thread>
 #include "VM.h"
 
 class AluTest: public ::testing::Test {
@@ -464,4 +466,12 @@ TEST_F(AluTest, shift_right_arithmedic) {
 
   vm_.execute(0x4020d1b3); //           sra gp,ra,sp
   EXPECT_EQ(vm_.get_regs(), values_);
+}
+
+TEST_F(AluTest, determine_clock_rate) {
+  Memory mem(1024);
+  const uint32_t start = mem.read_clock();
+  std::this_thread::sleep_for(std::chrono::seconds(4));
+  const uint32_t stop = mem.read_clock();
+  printf("Start: %u\nStop: %u\n", start, stop);
 }

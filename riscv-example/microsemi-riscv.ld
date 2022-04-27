@@ -14,7 +14,7 @@
  */
  
 OUTPUT_ARCH( "riscv" )
-ENTRY(_start)
+ENTRY(_entry)
 
 
 MEMORY
@@ -24,7 +24,7 @@ MEMORY
 
 RAM_START_ADDRESS   = 0x0;       /* Must be the same value MEMORY region ram ORIGIN above. */
 RAM_SIZE            = 64k;              /* Must be the same value MEMORY region ram LENGTH above. */
-STACK_SIZE          = 2k;               /* needs to be calculated for your application */             
+STACK_SIZE          = 10k;               /* needs to be calculated for your application */             
 HEAP_SIZE           = 2k;               /* needs to be calculated for your application */
 
 SECTIONS
