@@ -6,6 +6,11 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_C_STANDARD 11)
 
+if(NOT CMAKE_BUILD_TYPE)
+  message(STATUS "No build type specified. Defaulting to RELWITHDEBINFO")
+  set(CMAKE_BUILD_TYPE RELWITHDEBINFO CACHE STRING "Choose the type of build, options are: None Debug Releas    e RelWithDebInfo MinSizeRel ..." FORCE)
+endif()
+
 add_compile_options(-march=rv32i -mabi=ilp32)
 
 set(exe_name riscv-coremark-sim)
