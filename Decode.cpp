@@ -146,13 +146,8 @@ InstructionType decode_arithmetic_I(const uint32_t raw_instruction)
 int32_t sign_extend(const uint32_t orig_num, const uint8_t num_bits_in_orig_num)
 {
   const int m = 0b1 << (num_bits_in_orig_num - 1);
-  return (orig_num ^ m) - m;
-}
-
-int32_t decode_LW_imm(const uint32_t raw_instruction)
-{
-  const uint32_t a = (raw_instruction >> 20) & 0b111111111111;
-  return a;
+  const int32_t output = (orig_num ^ m) - m;
+  return output;
 }
 
 int32_t decode_I_imm(const uint32_t raw_instruction)

@@ -11,7 +11,7 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE RELWITHDEBINFO CACHE STRING "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel ..." FORCE)
 endif()
 
-add_compile_options(-march=rv32i -mabi=ilp32)
+add_compile_options(-march=rv32i -mabi=ilp32) # -S -fverbose-asm)
 
 set(exe_name riscv-coremark-sim)
 add_executable(${exe_name} entry.S core_list_join.c  core_main.c  core_matrix.c  core_portme.c  core_state.c  core_util.c  cvt.c  ee_printf.c)

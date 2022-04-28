@@ -21,9 +21,9 @@ class Memory {
     int8_t load_word(Registers& mstate, uint8_t rd, uint8_t rs1, int32_t imm);  // l2
     int8_t load_u_byte(Registers& mstate, uint8_t rd, uint8_t rs1, int32_t imm);  // lbu
     int8_t load_u_half(Registers& mstate, uint8_t rd, uint8_t rs1, int32_t imm);  // lhu
-    int8_t store_byte(Registers& mstate, uint8_t rs1, uint8_t rs2, int8_t imm); // lb
-    int8_t store_half(Registers& mstate, uint8_t rs1, uint8_t rs2, int8_t imm); // lh
-    int8_t store_word(Registers& mstate, uint8_t rs1, uint8_t rs2, int8_t imm); // l2
+    int8_t store_byte(Registers& mstate, uint8_t rs1, uint8_t rs2, int32_t imm); // lb
+    int8_t store_half(Registers& mstate, uint8_t rs1, uint8_t rs2, int32_t imm); // lh
+    int8_t store_word(Registers& mstate, uint8_t rs1, uint8_t rs2, int32_t imm); // l2
 
     // Return to Private
     uint8_t load(uint32_t req_address) const;         // Basic load an address

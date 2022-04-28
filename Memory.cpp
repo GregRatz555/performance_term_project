@@ -63,7 +63,7 @@ int8_t Memory::load_byte(Registers& regs, uint8_t rd, uint8_t rs1, int32_t imm){
 	uint32_t base = regs.get(rs1);
 	uint32_t req_address = base + imm;
 	uint32_t result = Memory::load(req_address);
-	return regs.set(rd, result);
+	return regs.set(rd, Decode::sign_extend(result, 8));
 }
 
 int8_t Memory::load_half(Registers& regs, uint8_t rd, uint8_t rs1, int32_t imm){
@@ -71,16 +71,22 @@ int8_t Memory::load_half(Registers& regs, uint8_t rd, uint8_t rs1, int32_t imm){
 	uint32_t req_address = base + imm;
 	uint32_t result = (Memory::load(req_address+1) << 8)
       | Memory::load(req_address);
-	return regs.set(rd, result);
+	return regs.set(rd, Decode::sign_extend(result, 16));
 }
 
 int8_t Memory::load_u_byte(Registers& regs, uint8_t rd, uint8_t rs1, int32_t imm){
-	// NOTE: I see no reason for this to vary from the "signed" version
-	return Memory::load_byte(regs, rd, rs1, imm);
+	uint32_t base = regs.get(rs1);
+	uint32_t req_address = base + imm;
+	uint32_t result = Memory::load(req_address);
+	return regs.set(rd, result);
 }
 
 int8_t Memory::load_u_half(Registers& regs, uint8_t rd, uint8_t rs1, int32_t imm){
-	return Memory::load_half(regs, rd, rs1, imm);
+	uint32_t base = regs.get(rs1);
+	uint32_t req_address = base + imm;
+	uint32_t result = (Memory::load(req_address+1) << 8)
+      | Memory::load(req_address);
+	return regs.set(rd, result);
 }
 
 int8_t Memory::load_word(Registers& regs, uint8_t rd, uint8_t rs1, int32_t imm){
@@ -88,7 +94,7 @@ int8_t Memory::load_word(Registers& regs, uint8_t rd, uint8_t rs1, int32_t imm){
 	const uint32_t req_address = base + imm;
 	uint32_t result;
 
-  if(req_address == 0xDEADBEEF) {
+  if(req_address == 0xDEADBEE0) {
     result = read_clock();
   } else {
 	  result = (Memory::load(req_address+3) << 24)
@@ -100,18 +106,19 @@ int8_t Memory::load_word(Registers& regs, uint8_t rd, uint8_t rs1, int32_t imm){
 }
 
 uint32_t Memory::read_clock() {
+  static const auto start_time = std::chrono::high_resolution_clock::now();
   const auto now = std::chrono::high_resolution_clock::now();
-  return now.time_since_epoch().count();
+  return (now - start_time).count() / 1000000;
 }
 
-int8_t Memory::store_byte(Registers& regs, uint8_t rs1, uint8_t rs2, int8_t imm){
+int8_t Memory::store_byte(Registers& regs, uint8_t rs1, uint8_t rs2, int32_t imm){
 	uint32_t base = regs.get(rs1);
 	uint32_t req_address = base + imm;
 	uint8_t  write_value = (regs.get(rs2) & 0xFF);
 	return Memory::store(req_address, write_value);
 }
 
-int8_t Memory::store_half(Registers& regs, uint8_t rs1, uint8_t rs2, int8_t imm){
+int8_t Memory::store_half(Registers& regs, uint8_t rs1, uint8_t rs2, int32_t imm){
 	uint32_t base = regs.get(rs1);
 	uint32_t req_address = base + imm;
 	uint32_t reg_value = regs.get(rs2);
@@ -121,7 +128,7 @@ int8_t Memory::store_half(Registers& regs, uint8_t rs1, uint8_t rs2, int8_t imm)
 	return Memory::store(req_address, write_value);
 }
 
-int8_t Memory::store_word(Registers& regs, uint8_t rs1, uint8_t rs2, int8_t imm){
+int8_t Memory::store_word(Registers& regs, uint8_t rs1, uint8_t rs2, int32_t imm){
 	uint32_t base = regs.get(rs1);
 	uint32_t req_address = base + imm;
 	uint32_t reg_value = regs.get(rs2);

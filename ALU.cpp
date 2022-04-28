@@ -109,7 +109,9 @@ bool ALU::BLT(Registers& mstate, uint8_t rs1, uint8_t rs2, int32_t imm){
 }
 
 bool ALU::BGE(Registers& mstate, uint8_t rs1, uint8_t rs2, int32_t imm){
-	if ((int32_t)mstate.get(rs1) >= (int32_t)mstate.get(rs2)) {
+  const int32_t lhs = mstate.get(rs1);
+  const int32_t rhs = mstate.get(rs2);
+	if (lhs >= rhs) {
 		mstate.set_pc(static_cast<int32_t>(mstate.get_pc()) + imm);
     return false;
 	}

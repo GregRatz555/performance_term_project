@@ -45,7 +45,7 @@ volatile ee_s32 seed5_volatile = 0;
 CORETIMETYPE
 barebones_clock()
 {
-	const CORETIMETYPE * const time_ptr = (CORETIMETYPE*)0xDEADBEEF;
+	const CORETIMETYPE * const time_ptr = (CORETIMETYPE*)0xDEADBEE0;
 	return *time_ptr;
 }
 /* Define : TIMER_RES_DIVIDER

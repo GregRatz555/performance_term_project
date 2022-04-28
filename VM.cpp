@@ -18,12 +18,14 @@ void VM::dump(const bool force) const
   regs_.dump(force);
 }
 
-bool VM::run() {
+bool VM::run(const bool should_dump) {
   while(keep_running_) {
     const uint32_t current_pc = regs_.get_pc();
     const uint32_t current_instruction = mem_.read_data<uint32_t>(current_pc);
     execute(current_instruction);
-    dump();
+    if(should_dump) {
+      dump();
+    }
   }
   return true;
 }
@@ -153,7 +155,7 @@ bool VM::execute(const uint32_t raw_instruction) {
     case Decode::kLoadWordInstruction:
       mem_.load_word(regs_, Decode::decode_rd(raw_instruction),
 		Decode::decode_rs1(raw_instruction),
-		Decode::decode_LW_imm(raw_instruction));
+		Decode::decode_I_imm(raw_instruction));
       break;
     case Decode::kLoadByteUInstruction:
       mem_.load_u_byte(regs_, Decode::decode_rd(raw_instruction),

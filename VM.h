@@ -23,7 +23,7 @@ class VM {
   public:
     VM(const size_t mem_size);
     bool execute(const uint32_t raw_instruction);
-    bool run();
+    bool run(const bool should_dump = false);
     bool run(uint32_t instruction_count);
     void dump(const bool force = false) const ;
     void dump_mem(uint32_t front, uint32_t back) const;

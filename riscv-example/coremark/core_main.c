@@ -115,11 +115,6 @@ MAIN_RETURN_TYPE
 main(int argc, char *argv[])
 {
 #endif
-	const char *hello = "Hello World\n";
-	for(int i = 0; i < 12; i++) { 
-	  uart_send_char(hello[i]);
-	}
-	ee_printf("Hello World\n");
     ee_u16       i, j = 0, num_algorithms = 0;
     ee_s16       known_id = -1, total_errors = 0;
     ee_u16       seedcrc = 0;
