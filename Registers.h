@@ -34,7 +34,7 @@ class Registers {
 
   uint8_t set(const uint8_t rd, uint32_t value);
   uint32_t get(const uint8_t rd) const;
-  void dump() const;
+  void dump(const bool force = false) const;
   const RegisterValues& get_values() const;
   void set_values(const RegisterValues &new_values);
 

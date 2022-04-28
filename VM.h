@@ -25,11 +25,15 @@ class VM {
     bool execute(const uint32_t raw_instruction);
     bool run();
     bool run(uint32_t instruction_count);
-    void dump() const ;
+    void dump(const bool force = false) const ;
     void dump_mem(uint32_t front, uint32_t back) const;
     void load_elf(const std::string &filename);
+
     const RegisterValues& get_regs() const;
     void set_regs(const RegisterValues &new_regs);
+
+    const Memory& get_mem() const;
+    void set_mem(const Memory &new_mem);
 };
 
 #endif

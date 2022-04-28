@@ -135,17 +135,6 @@ int8_t Memory::store_word(Registers& regs, uint8_t rs1, uint8_t rs2, int8_t imm)
 	return Memory::store(req_address, write_value);
 }
 
-uint32_t Memory::read_word(uint32_t req_address)
-{
-  uint32_t offset = req_address/sizeof(uint32_t);
-  return reinterpret_cast<uint32_t*>(storage)[offset];
-}
-void Memory::write_word(uint32_t req_address, uint32_t value)
-{
-  uint32_t offset = req_address/sizeof(uint32_t);
-  reinterpret_cast<uint32_t*>(storage)[offset] = value;
-}
-
 void Memory::debug_dump_range(uint32_t front, uint32_t back) const{
 	for (uint32_t i = front; i < back; i++){
 		uint8_t next = Memory::load(i);

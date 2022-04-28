@@ -13,17 +13,17 @@ VM::VM(const size_t mem_size)
 {
 }
 
-void VM::dump() const
+void VM::dump(const bool force) const
 {
-  regs_.dump();
+  regs_.dump(force);
 }
 
 bool VM::run() {
   while(keep_running_) {
     const uint32_t current_pc = regs_.get_pc();
-    const uint32_t current_instruction = mem_.read_word(current_pc);
+    const uint32_t current_instruction = mem_.read_data<uint32_t>(current_pc);
     execute(current_instruction);
-    //dump();
+    dump();
   }
   return true;
 }
@@ -31,7 +31,7 @@ bool VM::run() {
 bool VM::run(uint32_t instruction_count) {
   for (uint32_t i = 0; i<instruction_count; i++) {
     const uint32_t current_pc = regs_.get_pc();
-    const uint32_t current_instruction = mem_.read_word(current_pc);
+    const uint32_t current_instruction = mem_.read_data<uint32_t>(current_pc);
     execute(current_instruction);
     dump();
   }
@@ -293,4 +293,14 @@ const RegisterValues& VM::get_regs() const
 void VM::set_regs(const RegisterValues &new_regs)
 {
   regs_.set_values(new_regs);
+}
+
+const Memory& VM::get_mem() const
+{
+  return mem_;
+}
+
+void VM::set_mem(const Memory &new_mem)
+{
+  mem_ = new_mem;
 }

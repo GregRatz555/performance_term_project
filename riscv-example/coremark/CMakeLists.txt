@@ -8,7 +8,7 @@ set(CMAKE_C_STANDARD 11)
 
 if(NOT CMAKE_BUILD_TYPE)
   message(STATUS "No build type specified. Defaulting to RELWITHDEBINFO")
-  set(CMAKE_BUILD_TYPE RELWITHDEBINFO CACHE STRING "Choose the type of build, options are: None Debug Releas    e RelWithDebInfo MinSizeRel ..." FORCE)
+  set(CMAKE_BUILD_TYPE RELWITHDEBINFO CACHE STRING "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel ..." FORCE)
 endif()
 
 add_compile_options(-march=rv32i -mabi=ilp32)
@@ -20,4 +20,5 @@ target_include_directories(${exe_name} PUBLIC ${CMAKE_SOURCE_DIR})
 
 add_custom_command(TARGET ${exe_name} POST_BUILD
   COMMAND ${CMAKE_OBJCOPY} -O binary ${CMAKE_CURRENT_BINARY_DIR}/${exe_name} ${CMAKE_CURRENT_BINARY_DIR}/${exe_name}.objcopy.bin
+  COMMAND ${CMAKE_SOURCE_DIR}/objdump.sh ${CMAKE_CURRENT_BINARY_DIR}/${exe_name} ${CMAKE_CURRENT_BINARY_DIR}/${exe_name}.txt
       COMMENT "Invoking: Objcopy ${exe_name}")
