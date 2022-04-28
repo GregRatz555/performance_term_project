@@ -14,17 +14,20 @@
  */
  
 OUTPUT_ARCH( "riscv" )
-ENTRY(_entry)
+ENTRY(_start)
 
 
 MEMORY
 {
-    ram (rwx) : ORIGIN = 0x0, LENGTH = 64k
+    /* 384k total memory, accessed via instruction bus vs data bus.
+     * This is somewhat arbitrary split
+     */
+    irom   (rx)   : ORIGIN = 0x40000000, LENGTH = 256k
+    iram   (rwx)  : ORIGIN = 0x40380000, LENGTH = 32k
+    dram   (rw)   : ORIGIN = 0x3fc80000 + LENGTH(iram), LENGTH = 128k
 }
 
-RAM_START_ADDRESS   = 0x0;       /* Must be the same value MEMORY region ram ORIGIN above. */
-RAM_SIZE            = 64k;              /* Must be the same value MEMORY region ram LENGTH above. */
-STACK_SIZE          = 10k;               /* needs to be calculated for your application */             
+STACK_SIZE          = 2k;               /* needs to be calculated for your application */             
 HEAP_SIZE           = 2k;               /* needs to be calculated for your application */
 
 SECTIONS
@@ -67,7 +70,7 @@ SECTIONS
     PROVIDE_HIDDEN (__fini_array_end = .);
     . = ALIGN(0x10);
     
-  } > ram
+  } > iram
 
   /* short/global data section */
   .sdata : ALIGN(0x10)
@@ -80,7 +83,7 @@ SECTIONS
     *(.sdata .sdata.* .gnu.linkonce.s.*)
     . = ALIGN(0x10);
     __sdata_end = .;
-  } > ram
+  } > dram
 
   /* data section */
   .data : ALIGN(0x10)
@@ -92,7 +95,7 @@ SECTIONS
     *(.data .data.* .gnu.linkonce.d.*)
     . = ALIGN(0x10);
     __data_end = .;
-  } > ram
+  } > dram
 
   _edata = .; PROVIDE (edata = .);
 
@@ -104,7 +107,7 @@ SECTIONS
     *(.scommon)
     . = ALIGN(0x10);
     __sbss_end = .;
-  } > ram
+  } > dram
   
   /* sbss section */
   .bss : ALIGN(0x10)
@@ -115,7 +118,7 @@ SECTIONS
     *(COMMON)
     . = ALIGN(0x10);
     __bss_end = .;
-  } > ram
+  } > dram
 
   /* End of uninitialized data segment */
   _end = .;
@@ -127,13 +130,13 @@ SECTIONS
     __heap_end = .;
     . = ALIGN(0x10);
     _heap_end = __heap_end;
-  } > ram
+  } > dram
   
   .stack : ALIGN(0x10)
   {
     __stack_bottom = .;
     . += STACK_SIZE;
     __stack_top = .;
-  } > ram
+  } > dram
 }
 

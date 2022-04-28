@@ -9,10 +9,10 @@ add_compile_options(-march=rv32i -mabi=ilp32)
 
 macro(create_rv_exe exe_name exe_src)
   add_executable(${exe_name} ${exe_src})
-  set_target_properties(${exe_name} PROPERTIES LINK_FLAGS "-march=rv32i -mabi=ilp32 -T${CMAKE_CURRENT_SOURCE_DIR}/microsemi-riscv.ld -Wl,-Map=${CMAKE_CURRENT_BINARY_DIR}/${exe_name}.map")
+  set_target_properties(${exe_name} PROPERTIES LINK_FLAGS "-march=rv32i -mabi=ilp32 -T${CMAKE_SOURCE_DIR}/esp32-c3.ld -Wl,-Map=${CMAKE_CURRENT_BINARY_DIR}/${exe_name}.map")
 
   add_custom_command(TARGET ${exe_name} POST_BUILD
-    COMMAND ${CMAKE_OBJCOPY} -O binary ${CMAKE_CURRENT_BINARY_DIR}/${exe_name} ${CMAKE_CURRENT_BINARY_DIR}/${exe_name}.bin
+    COMMAND ${CMAKE_OBJCOPY} -O binary ${CMAKE_CURRENT_BINARY_DIR}/${exe_name} ${CMAKE_CURRENT_BINARY_DIR}/${exe_name}.objcopy.bin
         COMMENT "Invoking: Objcopy ${exe_name}")
 endmacro()
 

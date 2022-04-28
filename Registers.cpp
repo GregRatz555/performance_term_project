@@ -45,12 +45,18 @@ uint32_t Registers::get(const uint8_t rd) const
   return regs_.regs[rd];
 }
 
-void Registers::dump() const
+void Registers::dump(const bool force) const
 {
+  if(regs_.pc == 0) {
+    printf("********************************************************************\n");
+  }
   // Prints all register states
-  printf("REG[PC] = %d\n", regs_.pc);
+  printf("REG[PC] = 0x%x\n", regs_.pc);
+  if((regs_.pc > 0x59a0 && regs_.pc < 0x59b0) || force) {
   for (int r=0; r<32; r++) {
-    printf("REG[%02d] = %d\n", r, regs_.regs[r]);
+    printf("REG[%02d] = 0x%x\n", r, regs_.regs[r]);
+  }
+  printf("\n");
   }
 }
 
