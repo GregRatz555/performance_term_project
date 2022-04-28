@@ -33,7 +33,7 @@ class ALU {
 	void SRLI (Registers& mstate, uint8_t rd, uint8_t rs1, int32_t imm);
 	void SRAI (Registers& mstate, uint8_t rd, uint8_t rs1, int32_t imm);
 	void SLTI (Registers& mstate, uint8_t rd, uint8_t rs1, int32_t imm);
-	void SLTIU(Registers& mstate, uint8_t rd, uint8_t rs1, int32_t imm);
+	void SLTIU(Registers& mstate, uint8_t rd, uint8_t rs1, uint32_t imm);
 	// B-type functions
 	bool BEQ (Registers& mstate, uint8_t rs1, uint8_t rs2, int32_t imm);
 	bool BNE (Registers& mstate, uint8_t rs1, uint8_t rs2, int32_t imm);
