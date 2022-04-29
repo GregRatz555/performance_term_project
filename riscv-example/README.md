@@ -3,6 +3,9 @@ cd build
 cmake .. -DCMAKE_TOOLCHAIN_FILE=../riscv-toolchain.cmake
 make
 
+# How to run with spike
+time spike --isa=rv32i pk ./riscv-example/coremark/build/riscv-coremark-sim
+
 # To build container
 podman build -f Dockerfile-run -t riscv64-cmake
 

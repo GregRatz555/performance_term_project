@@ -662,8 +662,9 @@ ee_vsprintf(char *buf, const char *fmt, va_list args)
 void
 uart_send_char(char c)
 {
-	char* uart = (char*)0xDEADBEEE;
-	*uart = c;
+	printf("%c", c);
+	//char* uart = (char*)0xDEADBEEE;
+	//*uart = c;
     /*	Output of a char to a UART usually follows the following model:
             Wait until UART is ready
             Write char to UART

@@ -26,7 +26,7 @@ Original Author: Shay Gal-on
 #define PERFORMANCE_RUN 1
 
 // 0 means auto-detect number of iterations for 10 second test
-#define ITERATIONS 0
+#define ITERATIONS 4000
 
 /************************/
 /* Data types and settings */
