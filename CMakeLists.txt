@@ -11,7 +11,7 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE RELWITHDEBINFO CACHE STRING "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel ..." FORCE)
 endif()
 
-add_compile_options(-Wall)
+add_compile_options(-Wall -flto)
 
 enable_testing()
 find_package(GTest REQUIRED)
@@ -25,6 +25,7 @@ add_library(riscv-cpu
 )
 
 add_executable(rv_simulator main.cpp)
+set_target_properties(rv_simulator PROPERTIES LINK_FLAGS "-flto")
 target_link_libraries(rv_simulator riscv-cpu)
 
 add_executable(tests tests.cpp)
