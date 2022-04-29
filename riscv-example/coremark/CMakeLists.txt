@@ -14,7 +14,7 @@ endif()
 add_compile_options(-march=rv32i -mabi=ilp32 -fno-common -fno-builtin-printf -specs=/riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-linux-centos6/riscv64-unknown-elf/lib/rv32i/ilp32/sim.specs) # -S -fverbose-asm)
 
 set(exe_name riscv-coremark-sim)
-add_executable(${exe_name} entry.S core_list_join.c  core_main.c  core_matrix.c  core_portme.c  core_state.c  core_util.c  cvt.c  ee_printf.c clock.cpp)
+add_executable(${exe_name} entry.S core_list_join.c  core_main.c  core_matrix.c  core_portme.c  core_state.c  core_util.c  cvt.c  ee_printf.c)
 #add_executable(${exe_name} core_list_join.c  core_main.c  core_matrix.c  core_portme.c  core_state.c  core_util.c  cvt.c  ee_printf.c)
 set_target_properties(${exe_name} PROPERTIES LINK_FLAGS "-march=rv32i -mabi=ilp32 -T${CMAKE_SOURCE_DIR}/../microsemi-riscv.ld -fno-common -fno-builtin-printf -specs=/riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-linux-centos6/riscv64-unknown-elf/lib/rv32i/ilp32/sim.specs -Wl,-Map=${CMAKE_CURRENT_BINARY_DIR}/${exe_name}.map")
 target_include_directories(${exe_name} PUBLIC ${CMAKE_SOURCE_DIR})
